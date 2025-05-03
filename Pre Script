@@ -1,0 +1,324 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "SkipperHub / EH Premium",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Thanks for buying the best EH Script  that has not been detacted!",
+   LoadingSubtitle = "by Skipper",
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "This key will be saved auto.",
+      Subtitle = "Key System",
+      Note = "This Script will be updated more often then the regualar one.", -- Use this to tell the user how to get a key
+      FileName = "Enter Premium Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"GUIpremium"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local PreTab = Window:CreateTab("Premium features", 4483362458) -- Title, Image
+
+local SCRTab = Window:CreateTab("Scripthub´s", 4483362458) -- Title, Image
+
+local MovTab = Window:CreateTab("Movement", 4483362458) -- Title, Image
+
+local DISTab = Window:CreateTab("Thank you for buying Premium!", 4483362458) -- Title, Image
+
+
+local PreSection = PreTab:CreateSection("Premium--->")
+
+local SCRSection = SCRTab:CreateSection("Scripthub--->")
+
+local MovSection = MovTab:CreateSection("Movement--->")
+
+Rayfield:Notify({
+   Title = "Executed Premium!",
+   Content = "Have fun!",
+   Duration = 4.5,
+   Image = nil,
+})
+
+Rayfield:Notify({
+   Title = "everything exept --Premium features-- are not recommended to be used in Emergynce hamburg, it can maybe ban you!",
+   Content = "Please Note that you only use this Script on an old Account so that if you are getting banned nothing will be lost!!!",
+   Duration = 12,
+   Image = nil,
+})
+
+local Button = PreTab:CreateButton({
+   Name = "⭐️Tracer",
+   Callback = function()
+   local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local localPlayer = Players.LocalPlayer
+
+-- Tracer-Einstellungen
+local function createTracer()
+	local tracer = Drawing.new("Line")
+	tracer.Color = Color3.fromRGB(225,27,27)
+	tracer.Thickness = 1.5
+	tracer.Transparency = 1
+	tracer.Visible = true
+	return tracer
+end
+
+-- Spieler ESP hinzufügen (Highlight + Tracer)
+local trackedPlayers = {}
+
+local function addESP(targetPlayer)
+	if targetPlayer == localPlayer then return end
+
+	local function onCharacterAdded(character)
+		-- Highlight hinzufügen
+		local highlight = Instance.new("Highlight")
+		highlight.FillColor = Color3.fromRGB(0, 255, 0)
+		highlight.FillTransparency = 0.5
+		highlight.OutlineTransparency = 1
+		highlight.Adornee = character
+		highlight.Parent = character
+
+		-- Tracer erstellen
+		local tracer = createTracer()
+		trackedPlayers[targetPlayer] = {
+			character = character,
+			tracer = tracer
+		}
+	end
+
+	if targetPlayer.Character then
+		onCharacterAdded(targetPlayer.Character)
+	end
+
+	targetPlayer.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- Alle bestehenden Spieler tracken
+for _, player in pairs(Players:GetPlayers()) do
+	addESP(player)
+end
+
+-- Neue Spieler tracken
+Players.PlayerAdded:Connect(function(player)
+	addESP(player)
+end)
+
+-- Update Tracers jedes Frame
+RunService.RenderStepped:Connect(function()
+	for player, data in pairs(trackedPlayers) do
+		local character = data.character
+		local tracer = data.tracer
+
+		if character and character:FindFirstChild("HumanoidRootPart") then
+			local hrp = character.HumanoidRootPart
+			local screenPos, onScreen = workspace.CurrentCamera:WorldToViewportPoint(hrp.Position)
+			if onScreen then
+				local bottomOfScreen = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y)
+				tracer.From = bottomOfScreen
+				tracer.To = Vector2.new(screenPos.X, screenPos.Y)
+				tracer.Visible = true
+			else
+				tracer.Visible = false
+			end
+		else
+			tracer.Visible = false
+		end
+	end
+end)
+   end,
+})
+
+local Button = PreTab:CreateButton({
+   Name = "⭐️Name ESP",
+   Callback = function()
+   local Players = game:GetService("Players")
+
+-- Funktion zum Anzeigen aller Spielernamen
+local function printAllPlayerUsernames()
+    for _, player in ipairs(Players:GetPlayers()) do
+        print("Spieler im Spiel: " .. player.Name)
+    end
+end
+
+-- Initiale Ausgabe bei Spielstart
+printAllPlayerUsernames()
+
+-- Neue Spieler erkennen
+Players.PlayerAdded:Connect(function(player)
+    print("Neuer Spieler beigetreten: " .. player.Name)
+end)
+
+-- Spieler verlassen das Spiel
+Players.PlayerRemoving:Connect(function(player)
+    print("Spieler hat das Spiel verlassen: " .. player.Name)
+end)
+   end,
+})
+
+local Button = PreTab:CreateButton({
+   Name = "⭐️Job ESP",
+   Callback = function()
+   -- ServerScript in ServerScriptService
+
+local Players = game:GetService("Players")
+
+-- Liste möglicher Rollen
+local roles = {"Bürger", "Polizist", "Kriminell"}
+
+-- Funktion zur zufälligen Rollenzuweisung
+local function assignRole(player)
+    local roleValue = Instance.new("StringValue")
+    roleValue.Name = "Role"
+    roleValue.Value = roles[math.random(1, #roles)]  -- Zufällige Rolle
+    roleValue.Parent = player
+    print(player.Name .. " ist ein(e) " .. roleValue.Value)
+end
+
+-- Spieler betritt das Spiel
+Players.PlayerAdded:Connect(function(player)
+    assignRole(player)
+end)
+
+            -- LocalScript z. B. in StarterPlayerScripts
+
+local Players = game:GetService("Players")
+
+-- Funktion, um die Rolle jedes Spielers anzuzeigen
+local function printAllRoles()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local role = player:FindFirstChild("Role")
+        if role then
+            print(player.Name .. " ist ein(e) " .. role.Value)
+        else
+            print(player.Name .. " hat noch keine Rolle.")
+        end
+    end
+end
+
+-- Beim Start ausführen
+wait(2) -- kurz warten, damit Werte geladen sind
+printAllRoles()
+
+-- Aktualisierung bei neuen Spielern
+Players.PlayerAdded:Connect(function(player)
+    player:GetPropertyChangedSignal("Parent"):Wait()
+    wait(2)
+    printAllRoles()
+end)
+
+   end,
+})
+
+local Button = PreTab:CreateButton({
+   Name = "⚠️May bannable, and maybe not working⚠️ | Car Stealer",
+   Callback = function()
+   -- Einfaches Script: Spieler steigt per Klick in ein Auto ein
+
+local vehiclesFolder = workspace:WaitForChild("Vehicles")
+
+for _, vehicle in ipairs(vehiclesFolder:GetChildren()) do
+    local seat = vehicle:FindFirstChildWhichIsA("VehicleSeat")
+    local clickDetector = vehicle:FindFirstChildOfClass("ClickDetector")
+
+    if seat and clickDetector then
+        clickDetector.MouseClick:Connect(function(player)
+            local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                seat:Sit(humanoid)
+            end
+        end)
+    end
+end
+   end,
+})
+
+local Button = MovTab:CreateButton({
+   Name = "⭐️Walkspeed & Jump Power",
+   Callback = function()
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local speedBox = script.Parent:WaitForChild("SpeedSlider"):WaitForChild("SpeedBox")
+local jumpBox = script.Parent:WaitForChild("JumpSlider"):WaitForChild("JumpBox")
+
+-- Grenzen
+local minSpeed, maxSpeed = 16, 250
+local minJump, maxJump = 8, 100
+
+-- Hilfsfunktion: gültige Zahl?
+local function toNumberInRange(text, min, max)
+	local number = tonumber(text)
+	if number then
+		return math.clamp(number, min, max)
+	end
+	return nil
+end
+
+-- Geschwindigkeit ändern
+speedBox.FocusLost:Connect(function()
+	local newSpeed = toNumberInRange(speedBox.Text, minSpeed, maxSpeed)
+	if newSpeed and humanoid then
+		humanoid.WalkSpeed = newSpeed
+		speedBox.Text = tostring(newSpeed)
+	end
+end)
+
+-- Sprungkraft ändern
+jumpBox.FocusLost:Connect(function()
+	local newJump = toNumberInRange(jumpBox.Text, minJump, maxJump)
+	if newJump and humanoid then
+		humanoid.JumpPower = newJump
+		jumpBox.Text = tostring(newJump)
+	end
+end)
+
+-- Wenn Charakter respawnt
+player.CharacterAdded:Connect(function(char)
+	character = char
+	humanoid = char:WaitForChild("Humanoid")
+end)
+
+
+   end,
+})
+
+local SCRButton = SCRTab:CreateButton({
+   Name = "⭐️Infinity Yield",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+local SCRButton = SCRTab:CreateButton({
+   Name = "⭐️Solara v3 Hub",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/Solara%20Hub.lua"))()
+   end,
+})
+
+local SCRButton = SCRTab:CreateButton({
+   Name = "⭐️Chat troller (May not work)",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/ffedex/characters/refs/heads/main/chars', true))()
+   end,
+})
