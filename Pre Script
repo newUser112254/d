@@ -347,7 +347,7 @@ end
    end,
 })
 
-Button:Set("ESP")
+Button:Set("⭐️ Name ESP")
 
 
 local Button = PreTab:CreateButton({
@@ -375,207 +375,129 @@ end
 
 local Button = MovTab:CreateButton({
    Name = "⭐️fly",
-   Callback = function()
-local function API_Check()
-    if Drawing == nil then
-        return "No"
-    else
-        return "Yes"
-    end
+print("Fly Started")
+            --- Configs
+local flybutton = "e"
+local flyspeed = 100
+local controls = {
+	front = "w",
+	back = "s",
+	right = "d",
+	left = "a",
+	up = " ",
+	down = "q"
+}
+-- Configs
+
+local player = game:GetService("Players").LocalPlayer
+local mouse = player:GetMouse()
+local runservice = game:GetService("RunService")
+
+local flycontrol = {F = 0, R = 0, B = 0, L = 0, U = 0, D = 0}
+local flying = false
+
+local function fly()
+	local character = player.Character
+	if not character then return end
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	if not humanoid then return end
+	
+	flying = true
+	
+	local bv = Instance.new("BodyVelocity")
+	local bg = Instance.new("BodyGyro")
+	bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
+	bg.CFrame = hrp.CFrame
+	bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
+	bg.P = 9e4
+	bv.Parent = hrp
+	bg.Parent = hrp
+	
+	for i, child in pairs(character:GetDescendants()) do
+		if child:IsA("BasePart") then
+			coroutine.wrap(function()
+				local con = nil
+				con = runservice.Stepped:Connect(function()
+					if not flying then
+						con:Disconnect()
+						child.CanCollide = true
+					end
+					child.CanCollide = false
+				end)
+			end)()
+		end
+	end
+	
+	local con = nil
+	con = runservice.Stepped:Connect(function()
+		if not flying then
+			con:Disconnect()
+			bv:Destroy()
+			bg:Destroy()
+		end
+		
+		humanoid.PlatformStand = true
+		bv.Velocity = (workspace.Camera.CoordinateFrame.LookVector * ((flycontrol.F - flycontrol.B) * flyspeed)) + (workspace.CurrentCamera.CoordinateFrame.RightVector * ((flycontrol.R - flycontrol.L) * flyspeed)) + (workspace.CurrentCamera.CoordinateFrame.UpVector * ((flycontrol.U - flycontrol.D) * flyspeed))
+		bg.CFrame = workspace.Camera.CoordinateFrame
+	end)
+	
+	repeat wait() until not flying
+	
+	while humanoid.PlatformStand == true do
+		humanoid.PlatformStand = false
+		task.wait()
+	end
 end
 
-local Find_Required = API_Check()
-
-if Find_Required == "No" then
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-        Title = "SkipperHub";
-        Text = "ESP script could not be loaded because your exploit is unsupported.";
-        Duration = math.huge;
-        Button1 = "OK"
-    })
-
-    return
-end
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local Camera = workspace.CurrentCamera
-
-local Typing = false
-
-_G.SendNotifications = true   -- If set to true then the script would notify you frequently on any changes applied and when loaded / errored. (If a game can detect this, it is recommended to set it to false)
-_G.DefaultSettings = false   -- If set to true then the ESP script would run with default settings regardless of any changes you made.
-
-_G.TeamCheck = false   -- If set to true then the script would create ESP only for the enemy team members.
-
-_G.ESPVisible = true   -- If set to true then the ESP will be visible and vice versa.
-_G.TextColor = Color3.fromRGB(255, 80, 10)   -- The color that the boxes would appear as.
-_G.TextSize = 14   -- The size of the text.
-_G.Center = true   -- If set to true then the script would be located at the center of the label.
-_G.Outline = true   -- If set to true then the text would have an outline.
-_G.OutlineColor = Color3.fromRGB(0, 0, 0)   -- The outline color of the text.
-_G.TextTransparency = 0.7   -- The transparency of the text.
-_G.TextFont = Drawing.Fonts.UI   -- The font of the text. (UI, System, Plex, Monospace) 
-
-_G.DisableKey = Enum.KeyCode.Q   -- The key that disables / enables the ESP.
-
-local function CreateESP()
-    for _, v in next, Players:GetPlayers() do
-        if v.Name ~= Players.LocalPlayer.Name then
-            local ESP = Drawing.new("Text")
-
-            RunService.RenderStepped:Connect(function()
-                if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
-                    local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name]:WaitForChild("Head", math.huge).Position)
-
-                    ESP.Size = _G.TextSize
-                    ESP.Center = _G.Center
-                    ESP.Outline = _G.Outline
-                    ESP.OutlineColor = _G.OutlineColor
-                    ESP.Color = _G.TextColor
-                    ESP.Transparency = _G.TextTransparency
-                    ESP.Font = _G.TextFont
-
-                    if OnScreen == true then
-                        local Part1 = workspace:WaitForChild(v.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position
-                        local Part2 = workspace:WaitForChild(Players.LocalPlayer.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position or 0
-                        local Dist = (Part1 - Part2).Magnitude
-                        ESP.Position = Vector2.new(Vector.X, Vector.Y - 25)
-                        ESP.Text = ("("..tostring(math.floor(tonumber(Dist)))..") "..v.Name.." ["..workspace[v.Name].Humanoid.Health.."]")
-                        if _G.TeamCheck == true then 
-                            if Players.LocalPlayer.Team ~= v.Team then
-                                ESP.Visible = _G.ESPVisible
-                            else
-                                ESP.Visible = false
-                            end
-                        else
-                            ESP.Visible = _G.ESPVisible
-                        end
-                    else
-                        ESP.Visible = false
-                    end
-                else
-                    ESP.Visible = false
-                end
-            end)
-
-            Players.PlayerRemoving:Connect(function()
-                ESP.Visible = false
-            end)
-        end
-    end
-
-    Players.PlayerAdded:Connect(function(Player)
-        Player.CharacterAdded:Connect(function(v)
-            if v.Name ~= Players.LocalPlayer.Name then 
-                local ESP = Drawing.new("Text")
-    
-                RunService.RenderStepped:Connect(function()
-                    if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
-                        local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name]:WaitForChild("Head", math.huge).Position)
-    
-                        ESP.Size = _G.TextSize
-                        ESP.Center = _G.Center
-                        ESP.Outline = _G.Outline
-                        ESP.OutlineColor = _G.OutlineColor
-                        ESP.Color = _G.TextColor
-                        ESP.Transparency = _G.TextTransparency
-    
-                        if OnScreen == true then
-                            local Part1 = workspace:WaitForChild(v.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position
-                        local Part2 = workspace:WaitForChild(Players.LocalPlayer.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position or 0
-                            local Dist = (Part1 - Part2).Magnitude
-                            ESP.Position = Vector2.new(Vector.X, Vector.Y - 25)
-                            ESP.Text = ("("..tostring(math.floor(tonumber(Dist)))..") "..v.Name.." ["..workspace[v.Name].Humanoid.Health.."]")
-                            if _G.TeamCheck == true then 
-                                if Players.LocalPlayer.Team ~= Player.Team then
-                                    ESP.Visible = _G.ESPVisible
-                                else
-                                    ESP.Visible = false
-                                end
-                            else
-                                ESP.Visible = _G.ESPVisible
-                            end
-                        else
-                            ESP.Visible = false
-                        end
-                    else
-                        ESP.Visible = false
-                    end
-                end)
-    
-                Players.PlayerRemoving:Connect(function()
-                    ESP.Visible = false
-                end)
-            end
-        end)
-    end)
-end
-
-if _G.DefaultSettings == true then
-    _G.TeamCheck = false
-    _G.ESPVisible = true
-    _G.TextColor = Color3.fromRGB(40, 90, 255)
-    _G.TextSize = 14
-    _G.Center = true
-    _G.Outline = false
-    _G.OutlineColor = Color3.fromRGB(0, 0, 0)
-    _G.DisableKey = Enum.KeyCode.Q
-    _G.TextTransparency = 0.75
-end
-
-UserInputService.TextBoxFocused:Connect(function()
-    Typing = true
+mouse.KeyDown:Connect(function(key)
+	
+	if key:lower() == flybutton then
+		if flying then
+			flying = false
+		else
+			fly()
+		end
+	elseif key:lower() == controls.front then
+		flycontrol.F = 1
+	elseif key:lower() == controls.back then
+		flycontrol.B = 1
+	elseif key:lower() == controls.right then
+		flycontrol.R = 1
+	elseif key:lower() == controls.left then
+		flycontrol.L = 1
+	elseif key:lower() == controls.up then
+		flycontrol.U = 1
+	elseif key:lower() == controls.down then
+		flycontrol.D = 1
+	end
 end)
 
-UserInputService.TextBoxFocusReleased:Connect(function()
-    Typing = false
+mouse.KeyUp:Connect(function(key)
+	if key:lower() == controls.front then
+		flycontrol.F = 0
+	elseif key:lower() == controls.back then
+		flycontrol.B = 0
+	elseif key:lower() == controls.right then
+		flycontrol.R = 0
+	elseif key:lower() == controls.left then
+		flycontrol.L = 0
+	elseif key:lower() == controls.up then
+		flycontrol.U = 0
+	elseif key:lower() == controls.down then
+		flycontrol.D = 0
+	end
 end)
 
-UserInputService.InputBegan:Connect(function(Input)
-    if Input.KeyCode == _G.DisableKey and Typing == false then
-        _G.ESPVisible = not _G.ESPVisible
-        
-        if _G.SendNotifications == true then
-            game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "SkipperHub ";
-                Text = "The ESP's visibility is now set to "..tostring(_G.ESPVisible)..".";
-                Duration = 5;
-            })
-        end
-    end
+player.CharacterAdded:Connect(function()
+	flying = false
 end)
-
-local Success, Errored = pcall(function()
-    CreateESP()
-end)
-
-if Success and not Errored then
-    if _G.SendNotifications == true then
-        game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "Bayden Developer";
-            Text = "ESP script has successfully loaded.";
-            Duration = 5;
-        })
-    end
-elseif Errored and not Success then
-    if _G.SendNotifications == true then
-        game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "SkipperHub";
-            Text = "ESP script has errored while loading, please check the developer console! (F9)";
-            Duration = 5;
-        })
-    end
-    TestService:Message("The ESP script has errored, please notify BaydenHub with the following information :")
-    warn(Errored)
-    print("!! IF THE ERROR IS A FALSE POSITIVE (says that a player cannot be found) THEN DO NOT BOTHER !!")
-end
    -- The function that takes place when the button is pressed
    end,
 })
-
-Button:Set("⭐️Name ESP")
+   end,
+})
 
 local Button = SCRTab:CreateButton({
    Name = "⭐️Infinity Yield",
