@@ -499,6 +499,8 @@ end)
    end,
 })
 
+Button:Set("⭐️Fly")
+
 local Button = SCRTab:CreateButton({
    Name = "⭐️Infinity Yield",
    Callback = function()
