@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "SkipperHub / EH Premium",
+   Name = "⭐️SkipperHub / EH Premium⭐️",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Thanks for buying the best EH Script  that has not been detacted!",
    LoadingSubtitle = "by Skipper",
