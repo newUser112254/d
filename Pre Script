@@ -40,6 +40,8 @@ local SCRTab = Window:CreateTab("Scripthub´s", 4483362458) -- Title, Image
 
 local DISTab = Window:CreateTab("Thank you for buying Premium!", 4483362458) -- Title, Image
 
+local ATab = Window:CreateTab("More Features are coming soon...", nil) -- Title, Image
+
 
 local PreSection = PreTab:CreateSection("Premium--->")
 
