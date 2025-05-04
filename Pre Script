@@ -302,34 +302,34 @@ end)
    end,
 })
 
-local SCRButton = SCRTab:CreateButton({
+local Button = SCRTab:CreateButton({
    Name = "⭐️Infinity Yield",
    Callback = function()
    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
    end,
 })
 
-local SCRButton = SCRTab:CreateButton({
+local Button = SCRTab:CreateButton({
    Name = "⭐️Dex",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
    end,
 })
 
-local SCRButton = SCRTab:CreateButton({
+local Button = SCRTab:CreateButton({
    Name = "⭐️Solara v3 Hub",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/Solara%20Hub.lua"))()
    end,
 })
 
-local SCRButton = SCRTab:CreateButton({
+local Button = SCRTab:CreateButton({
    Name = "⭐️Chat troller (May not work)",
    Callback = function()
    loadstring(game:HttpGet('https://raw.githubusercontent.com/ffedex/characters/refs/heads/main/chars', true))()
    end,
 })
-local PreButton = PreTab:CreateButton({
+local Button = PreTab:CreateButton({
  Name = "⭐️Car Fly",
  Callback = function()
         local FlyKey = Enum.KeyCode.V
