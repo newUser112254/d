@@ -38,8 +38,6 @@ local PreTab = Window:CreateTab("Premium features", 4483362458) -- Title, Image
 
 local SCRTab = Window:CreateTab("Scripthub´s", 4483362458) -- Title, Image
 
-local MovTab = Window:CreateTab("Movement", 4483362458) -- Title, Image
-
 local DISTab = Window:CreateTab("Thank you for buying Premium!", 4483362458) -- Title, Image
 
 
