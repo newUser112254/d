@@ -349,59 +349,6 @@ end
 
 Button:Set("ESP")
 
-local Button = PreTab:CreateButton({
-   Name = "⭐️Job ESP",
-   Callback = function()
-   -- ServerScript in ServerScriptService
-
-local Players = game:GetService("Players")
-
--- Liste möglicher Rollen
-local roles = {"Bürger", "Polizist", "Kriminell"}
-
--- Funktion zur zufälligen Rollenzuweisung
-local function assignRole(player)
-    local roleValue = Instance.new("StringValue")
-    roleValue.Name = "Role"
-    roleValue.Value = roles[math.random(1, #roles)]  -- Zufällige Rolle
-    roleValue.Parent = player
-    print(player.Name .. " ist ein(e) " .. roleValue.Value)
-end
-
--- Spieler betritt das Spiel
-Players.PlayerAdded:Connect(function(player)
-    assignRole(player)
-end)
-
-            -- LocalScript z. B. in StarterPlayerScripts
-
-local Players = game:GetService("Players")
-
--- Funktion, um die Rolle jedes Spielers anzuzeigen
-local function printAllRoles()
-    for _, player in ipairs(Players:GetPlayers()) do
-        local role = player:FindFirstChild("Role")
-        if role then
-            print(player.Name .. " ist ein(e) " .. role.Value)
-        else
-            print(player.Name .. " hat noch keine Rolle.")
-        end
-    end
-end
-
--- Beim Start ausführen
-wait(2) -- kurz warten, damit Werte geladen sind
-printAllRoles()
-
--- Aktualisierung bei neuen Spielern
-Players.PlayerAdded:Connect(function(player)
-    player:GetPropertyChangedSignal("Parent"):Wait()
-    wait(2)
-    printAllRoles()
-end)
-
-   end,
-})
 
 local Button = PreTab:CreateButton({
    Name = "⚠️Patched⚠️ | Car Stealer",
@@ -771,7 +718,7 @@ local Button = PreTab:CreateButton({
 Button:Set("Car Fly")
 
 local Button = PreTab:CreateButton({
-   Name = "Button Example",
+   Name = "⭐️Job ESP",
    Callback = function()
    local Players = game:GetService("Players")
 
